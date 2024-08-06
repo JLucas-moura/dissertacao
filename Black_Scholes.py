@@ -53,7 +53,7 @@ op_price.dropna()
 
 
 # Baixando os dados consolidados obtidos no repositório
-op_price.to_csv('op_price.csv', index = False)
+#op_price.to_csv('op_price.csv', index = False)
 
 
 # --------- Cálculo do R2 -------------

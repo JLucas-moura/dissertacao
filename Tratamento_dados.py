@@ -33,7 +33,7 @@ df_list = []
 
 # Loop através dos anos para ler cada arquivo correspondente
 for ano in anos:
-    file = f'Modelo_dissertacao/COTAHIST_A{ano}.TXT'
+    file = f'COTAHIST_A{ano}.TXT'
     
     try:
         # Leia o arquivo em um DataFrame
@@ -79,8 +79,6 @@ df_op = df_bov[["data_pregao", "tipo_mercado", "nome_empresa",
                "cod_negociacao", "preco_exercicio", "preco_ultimo_negocio",
                "data_vencimento","numero_negocios" ]]
 
-len(df_op[df_op["nome_empresa"] == 'VALE'])
-
 df_op = df_op[(df_op['nome_empresa'] == "VALE")&
               (df_op['numero_negocios']>500)&
               (df_op["tipo_mercado"] == 70)] # para inserir op de venda"|(df_op["tipo_mercado"] == 80)]"
@@ -113,10 +111,10 @@ df_vale_merge = df_op.merge(df_vale_merge, left_on = 'data_pregao', right_on= 'd
 # ------ DataFrames Abaixo ------
 
 # Total de dados Ibovespa
-df_bov.to_csv('df_bov.csv', index = False)
+#df_bov.to_csv('df_bov.csv', index = False)
 
 # Dados de opções de compra vale
-df_op.to_csv('df_op.csv', index = False)
+#df_op.to_csv('df_op.csv', index = False)
 
 
 # Dados das ações da vale
@@ -150,12 +148,11 @@ selic['selic'] = selic['selic'] / 100
 
 df_vale_merge = df_vale_merge.merge(selic, left_on = 'data_pregao', right_on= 'data_pregao')
 
-# Diferenciando opeções ITM ATM e OTM
+# Diferenciando opções ITM ATM e OTM
+
 # Se op_price for > 1,05 do strike = ITM
 # Se op_price for < 1,05 > = 0,95 do strike = ATM
 # Se op_price for < 0,95 do strike = OTM
-
-df_vale_merge = pd.read_csv("df_vale_merge.csv")
 
 df_vale_merge['moneyness'] = 'OTM'
 
