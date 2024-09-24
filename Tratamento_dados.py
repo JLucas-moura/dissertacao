@@ -80,7 +80,7 @@ df_op = df_bov[["data_pregao", "tipo_mercado", "nome_empresa",
                "data_vencimento","numero_negocios" ]]
 
 df_op = df_op[(df_op['nome_empresa'] == "VALE")&
-              (df_op['numero_negocios']>500)&
+              #(df_op['numero_negocios']>50)&
               (df_op["tipo_mercado"] == 70)] # para inserir op de venda"|(df_op["tipo_mercado"] == 80)]"
 
 
@@ -145,6 +145,20 @@ selic.columns = ['data_pregao', 'selic']
 selic['data_pregao'] = pd.to_datetime(selic['data_pregao'])
 
 selic['selic'] = selic['selic'] / 100
+
+
+# Gráfico taxa SELIC 2015 a 2023
+plt.figure(figsize=(10, 6))
+plt.plot(selic['data_pregao'], selic['selic'], label='SELIC', color='b')
+plt.xlabel('Data')
+plt.ylabel('Taxa SELIC (%)')
+plt.grid(True)
+plt.xticks(rotation=45)
+plt.legend()
+plt.tight_layout()
+# Show the plot
+plt.show()
+
 
 df_vale_merge = df_vale_merge.merge(selic, left_on = 'data_pregao', right_on= 'data_pregao')
 
