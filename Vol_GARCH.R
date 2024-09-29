@@ -30,7 +30,7 @@ garch_spec <- ugarchspec(variance.model = list(model = "sGARCH",
 
 fit_garch <- ugarchfit(spec = garch_spec, data = df_vale$retorno)
 
-
+fit_garch
 # criando coluna com a volatilidade estimada a partir do modelo acima
 df_vale$garch_vol <- sigma(fit_garch)
 
@@ -39,21 +39,27 @@ df_vale$garch_vol <- df_vale$garch_vol * sqrt(252)
 
 # Gráfico dos retornos
 
-ggplot(df_vale, aes(x = data_pregao, y = retorno)) +
-  geom_line() +
+retorno_vale <- ggplot(df_vale, aes(x = data_pregao, y = retorno)) +
+  geom_line(color = "blue") +
   labs(x = "Data",
        y = "Retorno") +
-  theme_minimal()
+  theme_light()  
+
+#Salvar gráfico
+ggsave("grafico_retorno_vale.png", plot = retorno_vale, width = 10, height = 6)
 
 
 # Volatilidade estimada
 
-ggplot(df_vale, aes(x = data_pregao, y = garch_vol)) +
-  geom_line() +
+vol_vale <- ggplot(df_vale, aes(x = data_pregao, y = garch_vol)) +
+  geom_line(color = "blue") +
   labs(x = "Data",
        y = "Volatilidade Condicional") +
-  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +  # Define os intervalos e o formato dos anos
-  theme_minimal()
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  theme_light()  
+
+# Salvar o gráfico
+ggsave("grafico_volatilidade.png", plot = vol_vale, width = 10, height = 6)
 
 
   # Extraindo os residos do modelo

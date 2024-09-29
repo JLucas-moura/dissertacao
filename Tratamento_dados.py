@@ -93,13 +93,17 @@ df_vale = df_bov[["data_pregao", "tipo_mercado",
 df_vale = df_vale[df_vale['cod_negociacao'].str.contains("VALE3")&
                   (df_vale["tipo_mercado"] == 10)]
 
+df_vale = df_vale.set_index('data_pregao')
+df_vale = df_vale.sort_index()
+
 # Criando coluna com retornos logarítmicos 
 # df_vale['retorno'] = np.log(df_vale['preco_ultimo_negocio']).pct_change()
 df_vale['retorno'] = np.log(df_vale['preco_ultimo_negocio'] / df_vale['preco_ultimo_negocio'].shift(1))
 df_vale = df_vale.dropna()
 
 # Resetanto index
-df_vale = df_vale.reset_index().drop('index', axis=1)
+df_vale = df_vale.reset_index(drop=False)
+
 
 # Usando merge para consolidar os dois df, incluindo o preço do ativo objeto.
 
@@ -159,7 +163,11 @@ plt.tight_layout()
 # Show the plot
 plt.show()
 
+# garantindo que estão no mesmo formato de data
+df_vale_merge['data_pregao'] = pd.to_datetime(df_vale_merge['data_pregao'])
+selic['data_pregao'] = pd.to_datetime(selic['data_pregao'])
 
+# Merge para concatenar os dados
 df_vale_merge = df_vale_merge.merge(selic, left_on = 'data_pregao', right_on= 'data_pregao')
 
 # Diferenciando opções ITM ATM e OTM
@@ -183,3 +191,26 @@ df_vale_merge.loc[(df_vale_merge['preco_ultimo_negocio_y'] <= 1.05 * df_vale_mer
 
 # Dados com opções, ações da Vale e volatilidade consolidados
 df_vale_merge.to_csv('df_vale_merge.csv', index = False)
+
+
+#-------- Gráfico das ações da Vale --------#
+
+df_vale = df_vale.set_index('data_pregao')
+# Gráfico taxa VALE3 2015 a 2023
+plt.figure(figsize=(10, 6))
+plt.plot(df_vale.index, df_vale['preco_ultimo_negocio'], label='VALE3', color='b')
+plt.xlabel('Data')
+plt.ylabel('Em Reais')
+plt.grid(True)
+#plt.xticks(rotation=45)
+plt.legend()
+
+plt.tight_layout()
+
+plt.savefig('hist_preco_vale3.png')
+
+plt.show()
+
+
+
+
